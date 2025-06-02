@@ -1,0 +1,25 @@
+name: Cleanup Stale Branches
+
+on:
+  schedule:
+    - cron: '0 3 * * 0'  # Runs every Sunday at 3 AM UTC
+  workflow_dispatch:      # Allows manual run
+
+jobs:
+  delete-old-branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y jq
+
+      - name: Run branch cleanup
+        run: |
+          bash devops/branch-protection/cleanup-branches.sh
+        env:
+          GH_TOKEN:_
